@@ -100,5 +100,43 @@
 
             Assert.That(result.Output.Split(" ")[14], Is.EqualTo("FizzBuzz"));
         }
+
+        [Test]
+        public void Test_InputIsNull()
+        {
+            var input = (string)null;
+
+            Assert.Throws<ArgumentNullException>(() => _detector.getOverlappings(input));
+        }
+
+        [Test]
+        public void Test_InputLengthUnderLimit()
+        {
+            var input = "a";
+
+            Assert.Throws<ArgumentException>(() => _detector.getOverlappings(input));
+        }
+
+        [Test]
+        public void Test_InputLengthOverLimit()
+        {
+            var input = new string('a', 101);
+
+            Assert.Throws<ArgumentException>(() => _detector.getOverlappings(input));
+        }
+
+        [Test]
+        public void Test_NonAlphanumericCharactersRemoved()
+        {
+            var input = "a, -  a! a, a a a a";
+            var expectedOutput = "a, -  a! Fizz a Buzz Fizz a";
+            var expectedCount = 3;
+
+            var result = _detector.getOverlappings(input);
+
+            Assert.That(result.Output, Is.EqualTo(expectedOutput));
+            Assert.That(result.OverlapCount, Is.EqualTo(expectedCount));
+        }
+
     }
 }
